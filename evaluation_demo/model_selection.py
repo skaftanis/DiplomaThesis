@@ -39,7 +39,7 @@ class Ui_MainWindow2(object):
 
     def next_screen(self):
         if self.checkBox.isChecked():
-            self.files = "models/final_model_001"
+            self.files = "models/final_model_010"
             self.file_path = "testing/video1.npy"
             print('loading')
             self.curWindow.close()

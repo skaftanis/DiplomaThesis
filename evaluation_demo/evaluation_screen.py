@@ -122,7 +122,7 @@ class Ui_MainWindow_Evaluation(object):
 
         the_model = getattr(__import__(package, fromlist=[name]), name)
         self.model_dnn = the_model(3)
-        self.model_dnn.load(str(self.model)+"/model_spirosnet-11340")
+        self.model_dnn.load(str(self.model)+"/model_trained.tf1")
 
         self.label_2.setText("Live Input Data")
 
@@ -182,8 +182,10 @@ class Ui_MainWindow_Evaluation(object):
                 #predicted values
                 prediction = self.model_dnn.predict([X.reshape(100,250,6)])[0]
 
-                prediction[0] = - prediction[0]
-                prediction[2] = - prediction[2]
+                #prediction[0] = - prediction[0]
+                #prediction[2] = - prediction[2]
+
+
                 for k in range(3):
                     if prediction[k] > 1:
                         prediction[k] = 1
@@ -195,6 +197,8 @@ class Ui_MainWindow_Evaluation(object):
                 self.label.setText("Real Steering: " + real_steering)
                 self.label_6.setText("Real Throttle: " + real_throttle)
                 self.label_8.setText("Real Brakes:" + real_braking)
+
+
 
                 self.label_3.setText("Predicted Steering: " + str(prediction[1]))
                 self.label_7.setText("Predicted Throttle:" + str(prediction[2]))
@@ -209,11 +213,13 @@ class Ui_MainWindow_Evaluation(object):
                 self.label_11.setText("Throttle Error: " + str(te) )
                 self.label_12.setText("Braking Error: " + str(be) )
 
-                sumA += se
-                sumB += te
-                sumC += be
+                sumA += np.exp(se) - 1
+                sumB += np.exp(te) - 1
+                sumC += np.exp(be) - 1
 
                 avgA = se/(i*j+1)
+		
+
                 avgB = te/(i*j+1)
                 avgC = be/(i*j+1)
 
